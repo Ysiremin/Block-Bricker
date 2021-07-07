@@ -1,6 +1,6 @@
 Block Bricker Game
 ===========
-A Classic Block Bricker Game
+Classic Block Bricker Game
 <br><hr>
 My game project that I developed by learning and I am currently working on. I aim to complete it soon.
 Any suggestion or question please feel free to contact me yasireminciftci@gmail.com
