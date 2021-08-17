@@ -4,27 +4,34 @@ using UnityEngine;
 
 public class BallMovement : MonoBehaviour
 {
-    public float speed = 10;
+    [SerializeField] private RayCaster rayCaster;
+
     private Vector3 direction;
     private Vector3 movementDirection;
-    public RayCaster rayCaster;
+    private Color color;
+    private bool isColorSame = false;
+    private float speed = 0;
+
     public LineRenderer line;
+
+    public bool IsColorSame { get => isColorSame; }
 
     public void Start()
     {
         rayCaster.OnMauseButtonUp += OnMauseButtonUp;
     }
-    void Update()
+    private void Update()
     {
-        if (rayCaster.isPress && speed == 0)
+        color = GetComponent<Renderer>().material.color;
+
+        if (rayCaster.IsPress && speed == 0)
         {
-            direction = (rayCaster.hitPoint - transform.position).normalized;
+            direction = (rayCaster.HitPoint - transform.position).normalized;
             line.enabled = true;
             line.SetPosition(0, transform.position);
-            line.SetPosition(1, rayCaster.hitPoint);
+            line.SetPosition(1, rayCaster.HitPoint);
         }
         transform.position += movementDirection * speed * Time.deltaTime;
-
     }
 
     private void OnMauseButtonUp()
@@ -32,19 +39,29 @@ public class BallMovement : MonoBehaviour
         if (speed == 0)
         {
             movementDirection = direction;
-            speed = 10;
+            speed = 25;
             line.enabled = false;
         }
-
     }
-
     private void OnCollisionEnter(Collision collision)
     {
-        movementDirection = Vector3.Reflect(movementDirection, collision.GetContact(0).normal);
-        Debug.Log(collision.transform.name);
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        speed = 0;
+        if (collision.transform.GetComponent<Renderer>().material.color == color)
+        {
+            isColorSame = true;
+        }
+        else
+        {
+            isColorSame = false;
+        }
+
+        if (collision.transform.TryGetComponent(out Glue glue))
+        {
+            speed = 0;
+        }
+        else
+        {
+            movementDirection = Vector3.Reflect(movementDirection, collision.GetContact(0).normal);
+            //Debug.Log(collision.transform.name);
+        }
     }
 }

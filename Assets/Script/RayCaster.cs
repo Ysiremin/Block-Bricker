@@ -5,23 +5,18 @@ using UnityEngine.Events;
 
 public class RayCaster : MonoBehaviour
 {
-    Camera camera;
-    public bool isPress;
-    public Vector3 hitPoint;
     public UnityAction OnMauseButtonUp;
-    void Start()
-    {
-        camera = Camera.main;
-    }
+    private bool isPress;
+    private Vector3 hitPoint;
 
-    void Update()
+    public bool IsPress { get => isPress; }
+    public Vector3 HitPoint { get => hitPoint; }
+
+    private void Update()
     {
-        if (isPress)
+        if (isPress && Input.GetMouseButtonUp(0))
         {
-            if (Input.GetMouseButtonUp(0))
-            {
-                OnMauseButtonUp.Invoke();
-            }
+            OnMauseButtonUp.Invoke();
         }
 
         if (Input.GetMouseButton(0))
@@ -37,6 +32,7 @@ public class RayCaster : MonoBehaviour
 
     private void RayFromCamera()
     {
+        Camera camera = Camera.main;
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit))
